@@ -9,7 +9,8 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 COPY . /backend
 
 ENTRYPOINT ["python3"]
-CMD ["app.py"]
+
+CMD ["flask", "run", "--host=0.0.0.0", "--port=8000"]
 
 FROM builder as dev-envs
 
