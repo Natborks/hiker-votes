@@ -1,3 +1,4 @@
+import ClipPathButton from "./ClipPathButton/ClipPathButton";
 import PollItem from "./PollItem/PollItem";
 
 function PollOptionsList({ options }) {

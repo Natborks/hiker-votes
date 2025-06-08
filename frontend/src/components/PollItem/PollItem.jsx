@@ -1,16 +1,17 @@
-import styles from "./PollItem.module.css";
+import styles from "./pollitem.module.css";
+import ClipPathButton from "../ClipPathButton/ClipPathButton";
 
 function PollItem({ label, count, votedFor }) {
   return (
     <div className={styles.wrapper}>
-      <button type="button" className={styles.optionButton}>
-        <span className={styles.label}>{label}</span>
+      <ClipPathButton type="button">
+        <div className={styles.label}>{label}</div>
         {votedFor && (
-          <span className={styles.count} aria-label={"number of votes"}>
+          <div className={styles.count} aria-label={"number of votes"}>
             {`${count} votes`}
-          </span>
+          </div>
         )}
-      </button>
+      </ClipPathButton>
     </div>
   );
 }

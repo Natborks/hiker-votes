@@ -1,31 +1,20 @@
 .wrapper {
 }
-.optionButton {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background-color: #ffffff;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  font-size: 1rem;
-  text-align: left;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-}
 
-.optionButton:hover {
-  border-color: #007bff;
-  background-color: #f0f8ff;
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .label {
-  font-weight: 500;
+  display: inline-block;
+  font-weight: 700;
   color: #222;
 }
 
 .count {
+  display: inline-flex;
   font-size: 0.9rem;
   color: #666;
 }
