@@ -1,6 +1,4 @@
-Sure! Here’s a casual, friendly `README.md` you can drop in your project root:
 
----
 
 # 🥾 Trail Poll
 
