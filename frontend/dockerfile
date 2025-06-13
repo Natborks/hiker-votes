@@ -1,0 +1,33 @@
+FROM node:18-alpine AS build
+
+WORKDIR /app
+
+# Copy package files and install dependenciesAdd commentMore actions
+COPY package*.json ./
+
+# Install dependencies inside image
+RUN npm install
+
+# Copy rest of the source code
+COPY . .
+
+# Build the Vite app
+RUN npm run build
+
+
+FROM nginx:alpine
+
+# Copy custom nginx config if you have one
+COPY .nginx/nginx.conf /etc/nginx/conf.d/default.conf
+
+# Set working directory where Nginx serves files
+WORKDIR /usr/share/nginx/html
+
+# Clean default static assets
+RUN rm -rf ./*
+
+# Copy built static files from previous stage
+COPY --from=build /app/dist .
+
+EXPOSE 8080
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

@@ -1,0 +1,16 @@
+
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /frontend
+
+# Copy only package files first
+COPY . .
+
+# Install dependencies inside image
+RUN npm install
+
+EXPOSE 5173
+
+# Start dev server with hot reload
+CMD ["npm", "run", "dev", "--", "--host"]
