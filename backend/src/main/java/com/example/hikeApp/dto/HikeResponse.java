@@ -7,6 +7,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class HikeResponse {
+    private String id;
     private String question;
     private Integer numberOfVotes;
     private List<Option> options;

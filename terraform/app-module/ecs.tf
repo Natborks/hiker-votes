@@ -65,20 +65,20 @@ container_definitions = jsonencode([
       }
     }
   },
-  {
-    name      = "backend"
-    image     = var.backend_image_uri
-    essential = true
-    portMappings = [{ containerPort = 8080, protocol = "tcp" }]
-    logConfiguration = {
-      logDriver = "awslogs"
-      options = {
-        awslogs-group         = "/ecs/hiker-votes"
-        awslogs-region        = "us-east-1"
-        awslogs-stream-prefix = "ecs"
-      }
-    }
-  }
+  # {
+  #   name      = "backend"
+  #   image     = var.backend_image_uri
+  #   essential = true
+  #   portMappings = [{ containerPort = 8080, protocol = "tcp" }]
+  #   logConfiguration = {
+  #     logDriver = "awslogs"
+  #     options = {
+  #       awslogs-group         = "/ecs/hiker-votes"
+  #       awslogs-region        = "us-east-1"
+  #       awslogs-stream-prefix = "ecs"
+  #     }
+  #   }
+  # }
 ])
 
 }
