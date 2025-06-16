@@ -32,28 +32,58 @@ resource "aws_ecs_task_definition" "hiker-votes-task_definition" {
   memory                   = "1024"
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
 
-  container_definitions = jsonencode([
-    {
-      name      = "frontend"
-      image     = var.frontend_image_uri
-      essential = true
-      portMappings = [
-        {
-          containerPort = 8080
-          protocol      = "tcp"
-        }
-      ]
-    },
-    {
-      name      = "backend"
-      image     = var.backend_image_uri
-      essential = true
-      portMappings = [
-        {
-          containerPort = 80
-          protocol      = "tcp"
-        }
-      ]
+container_definitions = jsonencode([
+  # {
+  #   name      = "reverse-proxy"
+  #   image     = var.nginx_image_uri
+  #   essential = true
+  #   dependsOn = [
+  #     { containerName = "frontend", condition = "START" },
+  #     { containerName = "backend", condition = "START" }
+  #   ]
+  #   portMappings = [{ containerPort = 80, protocol = "tcp" }]
+  #   logConfiguration = {
+  #     logDriver = "awslogs"
+  #     options = {
+  #       awslogs-group         = "/ecs/hiker-votes"
+  #       awslogs-region        = "us-east-1"
+  #       awslogs-stream-prefix = "ecs"
+  #     }
+  #   }
+  # },
+  {
+    name      = "frontend"
+    image     = var.frontend_image_uri
+    essential = true
+    portMappings = [{ containerPort = 80, protocol = "tcp" }]
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        awslogs-group         = "/ecs/hiker-votes"
+        awslogs-region        = "us-east-1"
+        awslogs-stream-prefix = "ecs"
+      }
     }
-  ])
+  },
+  {
+    name      = "backend"
+    image     = var.backend_image_uri
+    essential = true
+    portMappings = [{ containerPort = 8080, protocol = "tcp" }]
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        awslogs-group         = "/ecs/hiker-votes"
+        awslogs-region        = "us-east-1"
+        awslogs-stream-prefix = "ecs"
+      }
+    }
+  }
+])
+
+}
+
+resource "aws_cloudwatch_log_group" "ecs_logs" {
+  name              = "/ecs/hiker-votes"
+  retention_in_days = 7
 }

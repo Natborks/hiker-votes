@@ -10,7 +10,7 @@ COPY . .
 # Install dependencies inside image
 RUN npm install
 
-EXPOSE 5173
+EXPOSE 80
 
 # Start dev server with hot reload
 CMD ["npm", "run", "dev", "--", "--host"]

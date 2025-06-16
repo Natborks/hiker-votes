@@ -1,5 +1,3 @@
-
-
 # 🥾 Trail Poll
 
 This is a little app I threw together for me and the gang to vote on which trail we’re hiking next.
@@ -17,6 +15,7 @@ It’s simple:
 
 Just React + Node + MongoDB — keeping it lightweight.
 Using MongoDB because I'm probably going to be changing the schema a lot.
+Dev environment uses an nginx reverse proxy tor route requests to frontend and backend. Production environment doesn't use this setup this.
 
 ## Diagrams
 

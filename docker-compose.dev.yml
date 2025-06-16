@@ -21,7 +21,7 @@ services:
   backend:
     build: ./backend
     ports:
-      - "80:8080"
+      - "8080:8080"
     container_name: backend
     environment:
       - SPRING_DATA_MONGODB_URI=mongodb://root:example@mongo:27017/mydatabase?authSource=admin
@@ -57,10 +57,13 @@ services:
 
   nginx:
     image: nginx:1.20.1
+    build:
+      context: ./nginx
+      dockerfile: dockerfile.dev
     volumes:
-      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro
     ports:
-      - 8080:80
+      - 80:80
     container_name: reverse-proxy
     networks:
       - hike-net

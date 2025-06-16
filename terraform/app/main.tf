@@ -28,10 +28,16 @@ variable "frontend_image_uri" {
   sensitive   = true
 }
 
+variable "nginx_image_uri" {
+  description = "frontend docker image uri"
+  sensitive   = true
+}
+
 module "app-module" {
   source = "../app-module"
 
   mongodb_uri        = var.mongodb_uri
   backend_image_uri  = var.backend_image_uri
   frontend_image_uri = var.frontend_image_uri
+  nginx_image_uri    = var.nginx_image_uri
 }
