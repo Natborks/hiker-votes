@@ -4,20 +4,19 @@ import PollWidget from "./components/PollWidget";
 import PollOptionsList from "./components/PollOptionList";
 
 function App() {
-  const [votes, setVotes] = useState(null);
+  const [hikes, setHikes] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
+    // `${import.meta.env.VITE_API_BASE_URL}/api/hikes/latest`
     const fetchLatestHike = async () => {
       try {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/api/hikes/latest`
-        );
+        const response = await fetch(`http://localhost:80/api/hikes/latest`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        setVotes(data);
+        setHikes(data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -30,12 +29,12 @@ function App() {
 
   if (loading) return <div>Loading hike data...</div>;
   if (error) return <div>Error fetching hike: {error}</div>;
-  if (!votes) return <div>No hike data available</div>;
+  if (!hikes) return <div>No hike data available</div>;
 
   return (
     <>
-      <PollWidget question={votes.question}>
-        <PollOptionsList options={votes.options} />
+      <PollWidget question={hikes.question}>
+        <PollOptionsList options={hikes.options} id={hikes.id} />
       </PollWidget>
     </>
   );

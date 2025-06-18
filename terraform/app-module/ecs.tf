@@ -33,29 +33,18 @@ resource "aws_ecs_task_definition" "hiker-votes-task_definition" {
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
 
 container_definitions = jsonencode([
-  # {
-  #   name      = "reverse-proxy"
-  #   image     = var.nginx_image_uri
-  #   essential = true
-  #   dependsOn = [
-  #     { containerName = "frontend", condition = "START" },
-  #     { containerName = "backend", condition = "START" }
-  #   ]
-  #   portMappings = [{ containerPort = 80, protocol = "tcp" }]
-  #   logConfiguration = {
-  #     logDriver = "awslogs"
-  #     options = {
-  #       awslogs-group         = "/ecs/hiker-votes"
-  #       awslogs-region        = "us-east-1"
-  #       awslogs-stream-prefix = "ecs"
-  #     }
-  #   }
-  # },
   {
     name      = "frontend"
     image     = var.frontend_image_uri
     essential = true
     portMappings = [{ containerPort = 80, protocol = "tcp" }]
+      environment = [
+      {
+        name = "VITE_API_BASE_URL",
+        value = "${aws_lb.hiker_alb.dns_name}:8080"
+          # value = "127.0.0.1:8080"
+      }
+    ]
     logConfiguration = {
       logDriver = "awslogs"
       options = {
@@ -64,12 +53,19 @@ container_definitions = jsonencode([
         awslogs-stream-prefix = "ecs"
       }
     }
-  },
+    }
+  ,
   {
     name      = "backend"
     image     = var.backend_image_uri
     essential = true
     portMappings = [{ containerPort = 8080, protocol = "tcp" }]
+      environment = [
+      {
+        name = "SPRING_DATA_MONGODB_URI",
+        value = var.mongodb_uri
+      }
+    ]
     logConfiguration = {
       logDriver = "awslogs"
       options = {

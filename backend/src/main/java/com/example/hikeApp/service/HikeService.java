@@ -46,6 +46,7 @@ public class HikeService {
 
     private HikeResponse convertToResponse(Hike hike) {
         return new HikeResponse(
+            hike.getId(),
             hike.getName() + " - " + hike.getDescription(),
             hike.getVotes(),
             hike.getOptions().stream()

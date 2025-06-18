@@ -1,4 +1,5 @@
-function useStickyState(defaultValue, key) {
+import React from "react";
+export default function useStickyState(defaultValue, key) {
   const [value, setValue] = React.useState(() => {
     const stickyValue = window.localStorage.getItem(key);
 
