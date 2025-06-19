@@ -2,44 +2,31 @@ import { useState } from "react";
 import useStickyState from "../hooks/useStickyState";
 import PollItem from "../components/PollItem/PollItem";
 
-function PollOptionsList({ id: voteid, options }) {
-  const [value, setValue] = useStickyState(null, voteid);
+function PollOptionsList({ id: voteId, options, vote }) {
+  const [value, setValue] = useStickyState(null, voteId);
   const votedFor = value != null;
 
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
 
   const handleVote = async (id) => {
+    if (votedFor) return;
+
     if (!name || !date) {
       alert("Please fill out both name and date before voting.");
       return;
     }
 
-    try {
-      await fetch("http://localhost:80/api/hikes/vote", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          voteId: voteid,
-          optionId: id,
-          name,
-          date,
-        }),
-      });
+    vote({ name, date, optionId: id, voteId });
 
-      setValue(voteid);
-    } catch (err) {
-      console.error("Failed to submit vote", err);
-      alert("There was an error submitting your vote. Please try again.");
-    }
+    setValue(voteId);
   };
 
   return (
     <div
       style={{
-        maxWidth: "400px",
+        boxSizing: "border-box",
+        width: "100%",
         padding: "16px",
         border: "1px solid #ddd",
         borderRadius: "12px",
