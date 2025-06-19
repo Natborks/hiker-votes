@@ -2,6 +2,7 @@ package com.example.hikeApp.controller;
 
 import com.example.hikeApp.dto.HikeRequest;
 import com.example.hikeApp.dto.HikeResponse;
+import com.example.hikeApp.dto.HikeVoteRequest;
 import com.example.hikeApp.service.HikeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,16 @@ public class HikeController {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(hikeService.createHike(request));
+    }
+
+    @PostMapping("/vote")
+    public ResponseEntity<HikeResponse> vote(
+        @Valid @RequestBody HikeVoteRequest request
+    ) {
+        
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(hikeService.voteForHike(request));
     }
 
     @GetMapping("/latest")

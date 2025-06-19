@@ -1,15 +1,15 @@
 resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
-  enable_dns_hostnames = true 
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_hostnames = true
   enable_dns_support   = true
 }
 
-resource "aws_lb_target_group" "hiker-votes-tg" {
-  name     = "hiker-votes-lb-tg"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = aws_vpc.main.id
-  target_type = "ip"
+resource "aws_lb_target_group" "hiker-votes-tg-fe" {
+  name                 = "hiker-votes-lb-tg-fe"
+  port                 = 80
+  protocol             = "HTTP"
+  vpc_id               = aws_vpc.main.id
+  target_type          = "ip"
   deregistration_delay = 10
 
   health_check {
@@ -22,13 +22,38 @@ resource "aws_lb_target_group" "hiker-votes-tg" {
   }
 }
 
+resource "aws_lb_target_group" "hiker-votes-tg-be" {
+  name                 = "hiker-votes-lb-tg-be"
+  port                 = 8080
+  protocol             = "HTTP"
+  vpc_id               = aws_vpc.main.id
+  target_type          = "ip"
+  deregistration_delay = 10
+
+  health_check {
+    path                = "/api/hikes/latest"
+    interval            = 80
+    timeout             = 60
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    matcher             = "200-399"
+  }
+}
+
 resource "aws_security_group" "ecs_service_sg" {
-  name        = "ecs-service-sg"
-  vpc_id      = aws_vpc.main.id
+  name   = "ecs-service-sg"
+  vpc_id = aws_vpc.main.id
 
   ingress {
     from_port       = 80
     to_port         = 80
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb_sg.id]
+  }
+
+    ingress {
+    from_port       = 8080
+    to_port         = 8080
     protocol        = "tcp"
     security_groups = [aws_security_group.alb_sg.id]
   }
@@ -47,8 +72,8 @@ resource "aws_iam_role" "ecs_task_execution_role" {
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [{
-      Action    = "sts:AssumeRole",
-      Effect    = "Allow",
+      Action = "sts:AssumeRole",
+      Effect = "Allow",
       Principal = {
         Service = "ecs-tasks.amazonaws.com"
       }
@@ -61,16 +86,16 @@ resource "aws_internet_gateway" "igw" {
 }
 
 resource "aws_subnet" "public_1" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.1.0/24"
-  availability_zone = "us-east-1a"
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.1.0/24"
+  availability_zone       = "us-east-1a"
   map_public_ip_on_launch = true
 }
 
 resource "aws_subnet" "public_2" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.2.0/24"
-  availability_zone = "us-east-1b"
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.2.0/24"
+  availability_zone       = "us-east-1b"
   map_public_ip_on_launch = true
 }
 
@@ -118,7 +143,7 @@ resource "aws_lb" "hiker_alb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]
-  subnets            = [
+  subnets = [
     aws_subnet.public_1.id,
     aws_subnet.public_2.id
   ]
@@ -131,7 +156,23 @@ resource "aws_lb_listener" "hiker_http" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.hiker-votes-tg.arn
+    target_group_arn = aws_lb_target_group.hiker-votes-tg-fe.arn
+  }
+}
+
+resource "aws_lb_listener_rule" "backend_http" {
+  listener_arn = aws_lb_listener.hiker_http.arn
+  priority     = 10
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.hiker-votes-tg-be.arn
+  }
+
+  condition {
+    path_pattern {
+      values = ["/api/*"]
+    }
   }
 }
 
