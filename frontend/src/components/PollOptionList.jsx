@@ -1,31 +1,39 @@
-import { useState } from "react";
+import { useEffect, useId, useState } from "react";
 import useStickyState from "../hooks/useStickyState";
 import PollItem from "../components/PollItem/PollItem";
 
-function PollOptionsList({ id: voteId, options, vote }) {
-  const [value, setValue] = useStickyState(null, voteId);
-  const votedFor = value != null;
+function PollOptionsList({ id: voteId, options, vote, totalVotes }) {
+  const [value, setValue] = useStickyState(false, voteId);
 
   const [name, setName] = useState("");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(() => {
+    const today = new Date();
+    return today.toISOString().split("T")[0];
+  });
+
+  const votedFor = value;
 
   const handleVote = async (id) => {
     if (votedFor) return;
 
-    if (!name || !date) {
-      alert("Please fill out both name and date before voting.");
-      return;
+    // if (!name) {
+    //   alert("Please fill out the name field");
+    //   return;
+    // }
+
+    try {
+      //setvalue optimistically
+      setValue(true);
+      await vote({ name, date, optionId: id, voteId });
+    } catch (err) {
+      setValue(false);
+      alert("Vote failed. Please try again.");
     }
-
-    vote({ name, date, optionId: id, voteId });
-
-    setValue(voteId);
   };
 
   return (
     <div
       style={{
-        boxSizing: "border-box",
         width: "100%",
         padding: "16px",
         border: "1px solid #ddd",
@@ -72,7 +80,7 @@ function PollOptionsList({ id: voteId, options, vote }) {
               htmlFor="date"
               style={{ marginBottom: "4px", fontWeight: "bold" }}
             >
-              Availability (after 3pm):
+              Availability, If you're unavailable on wednesday:
             </label>
             <input
               type="date"
@@ -82,8 +90,9 @@ function PollOptionsList({ id: voteId, options, vote }) {
               onChange={(e) => setDate(e.target.value)}
               style={{
                 padding: "10px",
-                borderRadius: "8px",
+                backgroundColor: "transparent",
                 border: "1px solid #ccc",
+                borderRadius: "8px",
                 fontSize: "16px",
               }}
             />
@@ -100,13 +109,16 @@ function PollOptionsList({ id: voteId, options, vote }) {
           padding: 0,
         }}
       >
-        <span>Click to vote</span>
+        {!votedFor && <span>Click to vote</span>}
+
         {options.map((option) => (
-          <li key={option.id} onClick={() => handleVote(option.id)}>
+          <li key={option.id}>
             <PollItem
+              onClick={() => handleVote(option.id)}
               label={option.label}
               count={option.count}
               votedFor={votedFor}
+              percentage={(option.count / totalVotes) * 100}
             />
           </li>
         ))}

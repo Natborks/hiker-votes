@@ -16,31 +16,34 @@
   transition: all 0.2s ease-in-out;
 }
 
-.button:hover {
-  border-color: #007bff;
-  background-color: #f0f8ff;
+.button:active {
+  transform: scale(0.99);
+  background-color: transparent;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .overlay {
   position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  will-change: transform;
+  top: 0;
+  left: 0;
+  height: 100%;
+  z-index: 1;
   border-radius: 8px;
-  gap: 0.5rem;
   background-color: #f0f8ff;
 
   transform-origin: left;
+  transform: scaleX(0);
   animation: overlayFill 1s linear forwards;
 }
 
 @keyframes overlayFill {
-  from {
+  /* from {
     transform: scaleX(0);
-  }
+    -webkit-transform: scaleX(0);
+  } */
   to {
-    transform: scaleX(1);
+    -webkit-transform: scaleX(1);
   }
 }
 

@@ -1,65 +1,43 @@
 import "./App.css";
+import { useSelector, useDispatch } from "react-redux";
+
 import { useEffect, useState } from "react";
 import PollWidget from "./components/PollWidget";
 import PollOptionsList from "./components/PollOptionList";
+import { setHike } from "./reducer/voteReducer";
+import { fetchLatestHike, saveVote } from "./service/latestHike";
 
 function App() {
-  const [hikes, setHikes] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const hikes = useSelector((state) => state);
+  const [voted, setVoted] = useState(null);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    //
-    const fetchLatestHike = async () => {
-      try {
-        const response = await fetch(`/api/hikes/latest`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setHikes(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchLatestHike();
+    fetchLatestHike().then((data) => dispatch(setHike(data)));
   }, []);
 
-  const vote = async (data) => {
+  const handlevote = async (data) => {
     try {
-      const res = await fetch(`/api/hikes/vote`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (res.ok) {
-        const responseData = await res.json();
-        setHikes(responseData);
-      }
-    } catch (err) {
-      console.error("Failed to submit vote", err);
-      alert("There was an error submitting your vote. Please try again.");
+      const response = await saveVote(data);
+      dispatch(setHike(response));
+    } catch (error) {
+      dispatch(setHike(hikes));
+      throw error;
     }
   };
 
-  if (loading) return <div>Loading hike data...</div>;
-  if (error) return <div>Error fetching hike: {error}</div>;
-  if (!hikes) return <div>No hike data available</div>;
+  if (!hikes) return <div>fetching...</div>;
 
   return (
     <main className="wrapper">
       <PollWidget question={hikes.question}>
         <PollOptionsList
+          key={hikes.numberOfVotes}
           options={hikes.options}
           id={hikes.id}
-          vote={vote}
-          key={Math.random()}
+          vote={handlevote}
+          totalVotes={hikes.numberOfVotes}
         />
       </PollWidget>
     </main>
