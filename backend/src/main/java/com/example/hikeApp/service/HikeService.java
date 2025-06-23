@@ -25,6 +25,7 @@ public class HikeService {
         Hike hike = hikeRepository.findById(request.getVoteId())
             .orElseThrow(() -> new RuntimeException("Hike not found"));
     
+        hike.setVotes(hike.getVotes() + 1);
    
         for (HikeOption option : hike.getOptions()) {
             if (option.getId().equals(request.getOptionId())) {
@@ -44,14 +45,8 @@ public class HikeService {
                 .build());
         }
 
-        return HikeResponse.builder()
-            .id(hike.getId())
-            .question(hike.getDescription())
-            .numberOfVotes(hike.getVotes())
-            .options(optionResponses)
-            .build();
-
-            }
+        return convertToResponse(hike);
+    }
     
     
     public HikeResponse createHike(HikeRequest request) {
@@ -94,5 +89,6 @@ public class HikeService {
                 .toList()
         );
     }
+
 }
 

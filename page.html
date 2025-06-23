@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hi there!</title>
+    <style>
+      body {
+        background-color: #f5eeda;
+        font-family: "Georgia", serif;
+        color: black;
+        margin: 0;
+        padding: 2rem;
+      }
+
+      h1 {
+        font-style: italic;
+      }
+
+      p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        max-width: 700px;
+      }
+
+      .articles {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+      }
+
+      article {
+        width: 560px;
+        padding: 1rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      article h2 {
+        text-decoration: underline;
+        font-style: italic;
+        margin-bottom: 1rem;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      li {
+        margin-bottom: 1.5rem;
+      }
+
+      li strong {
+        display: block;
+        margin-bottom: 0.3rem;
+      }
+
+      a {
+        color: #0000cc;
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Hi there! I'm Nathanel</h1>
+    <p>
+      I am a passionate developer with a keen interest in building scalable,
+      user-friendly applications. Beyond coding, I enjoy airplanes, hiking, and
+      volunteer work. The projects below showcase some of the work I’ve done
+      across personal, professional, and academic domains. (A nicer website is
+      in the works)
+    </p>
+
+    <div class="articles">
+      <article>
+        <h2>Personal Projects</h2>
+        <ul>
+          <li>
+            <strong>Hiker Votes</strong>
+            A poll widget to poll my friends on which hikes to do this summer.
+            Uses the following tech stack: React, Spring Boot, Docker,
+            Terraform, AWS(ECS, FARGATE), Cloudflare.
+            <br /><a
+              href="http://hiker.zipyer.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              >hiker.zipyer.com</a
+            >
+          </li>
+          <li>
+            <strong>Real-Time Logistics Tracker</strong>
+            This project is a real-time driver dispatch and monitoring system
+            designed to simulate the coordination of delivery drivers during
+            emergencies. It includes a WebSocket server (Node.js) and a
+            React-based dashboard for interacting with driver data in real time.
+            The system allows dispatchers to pause/resume drivers, complete
+            trips, and reassign tasks dynamically. Driver locations are
+            simulated and periodically updated for demonstration purposes.
+            <br /><a
+              href="https://github.com/Natborks/logitrucker"
+              target="_blank"
+              rel="noopener noreferrer"
+              >GitHub repository</a
+            >
+          </li>
+        </ul>
+      </article>
+
+      <article>
+        <h2>Real-World (Professional) Projects</h2>
+        <ul>
+          <li>
+            <strong>YouStart</strong>
+            A government-backed platform helping individuals and entrepreneurs
+            apply for startup loans online. I led the team that built the
+            project, creating intuitive React interfaces for applicants and
+            developing an admin dashboard to manage applications. Our work
+            improved accessibility, reduced manual processing, and expanded
+            financial reach.
+            <br /><a
+              href="https://application.youstart.com.gh/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >application.youstart.com.gh</a
+            >
+          </li>
+          <li>
+            <strong>Ramafrique</strong>
+            Ramafrique is an online retailer specializing in exquisite African
+            bags featuring unique designs and vibrant colors. I contributed to
+            the project by developing and managing the financial payment
+            processing system, ensuring secure and seamless transactions.
+            <br /><a
+              href="https://www.ramafrique.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >ramafrique.com</a
+            >
+          </li>
+          <li>
+            <strong>Zipyer</strong>
+            Led the architecture and development of a cloud-native rideshare
+            platform delivering bespoke ride management solutions. The backend
+            is built as an event-sourced Spring Boot application leveraging
+            PostgreSQL, MongoDB, and Ambar Event Bus, integrated with
+            unsupervised machine learning algorithms to optimize ride
+            operations. Currently, the project is nearing completion under my
+            technical leadership.
+            <br /><a
+              href="https://zipyer.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              >zipyer.com</a
+            >
+          </li>
+        </ul>
+      </article>
+
+      <article>
+        <h2>School Projects</h2>
+        <ul>
+          <li>
+            <strong>Ski Resort</strong>
+            A ski app that allows users to easily find amenities in a ski area.
+            For this project, I really enjoyed applying Andy Bell’s Every Layout
+            principles to compose the responsive main page. Please visit:
+            <a
+              href="https://ski-resort-map.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >ski-resort-map.vercel.app</a
+            ><br />
+            <em
+              >Note: Since we use free tier deployment services, the backend may
+              take approximately 50 seconds to start from a cold state. Thank
+              you for your understanding!</em
+            >
+          </li>
+        </ul>
+      </article>
+    </div>
+  </body>
+</html>

@@ -12,6 +12,6 @@ export default {
     watch: {
       usePolling: false,
     },
-    allowedHosts: ["all"],
+    allowedHosts: true,
   },
 };

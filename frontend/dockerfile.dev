@@ -4,11 +4,19 @@ FROM node:18-alpine
 # Set working directory
 WORKDIR /frontend
 
-# Copy only package files first
-COPY . .
+# Copy package files and install dependenciesAdd commentMore actions
+COPY package.json ./
 
 # Install dependencies inside image
 RUN npm install
+
+#Install serve. It helps you serve a static site, single page application or just a static file.
+RUN npm i -g serve
+
+# Copy only package files first
+COPY . .
+
+RUN npm run build
 
 EXPOSE 5173
 

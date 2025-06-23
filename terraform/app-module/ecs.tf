@@ -61,7 +61,7 @@ resource "aws_ecs_task_definition" "hiker-votes-task_definition_frontend" {
     environment = [
       {
         name  = "VITE_API_BASE_URL",
-        value = format("http://%s/api", aws_lb.hiker_alb.dns_name)
+        value = format("http://%s/", aws_lb.hiker_alb.dns_name)
         # value = "127.0.0.1:8080"
       }
     ]
